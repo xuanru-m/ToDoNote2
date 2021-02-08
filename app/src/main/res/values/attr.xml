@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="delete" format="string"/>
+    <attr name="delete_all" format="string"/>
+    <attr name="dehaze" format="string"/>
+    <attr name="titleColor" format="color"/>
+    <attr name="sun" format="string"/>
+    <attr name="star" format="string"/>
+
+</resources>
