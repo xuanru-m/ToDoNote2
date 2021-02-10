@@ -54,6 +54,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
                 Note note = mNoteList.get(position);
                 String text=note.getContent();
                 Toast.makeText(v.getContext(), "you clicked finish " + text, Toast.LENGTH_SHORT).show();
+
             }
         });
         holder.view.setOnClickListener(new View.OnClickListener() {
@@ -74,10 +75,27 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
-                Note fruit = mNoteList.get(position);
-                Toast.makeText(v.getContext(), "you clicked important " + fruit.getContent(), Toast.LENGTH_SHORT).show();
+                Note note = mNoteList.get(position);
+                Toast.makeText(v.getContext(), "you clicked important " + note.getContent(), Toast.LENGTH_SHORT).show();
+                if(note.getTag()!=3) {//important to normal
+                    CRUD op = new CRUD(v.getContext());
+                    op.open();
+                    op.updateNote(note, 3);
+                    op.close();
+                    holder.important.setBackgroundColor(view.getContext().getResources().getColor(R.color.design_default_color_secondary));
+                }else{//normal to important
+                    CRUD op = new CRUD(v.getContext());
+                    op.open();
+                    op.updateNote(note, 1);
+                    op.close();
+                    holder.important.setBackgroundColor(view.getContext().getResources().getColor(R.color.purple_500));
+                }
+
+
+
             }
         });
+
         return holder;
     }
 

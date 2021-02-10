@@ -53,7 +53,12 @@ public class TagAdapter extends BaseAdapter {
         TextView text_tag = v.findViewById(R.id.text_tag);
         //ImageView delete_tag = v.findViewById(R.id.delete_tag);
 
-        blank_tag.setText(numList.get(position).toString());
+        if(position==0){
+            blank_tag.setText("All");
+        }else {
+            blank_tag.setText(numList.get(position).toString());
+        }
+
         text_tag.setText(tagList.get(position));
 
         return v;

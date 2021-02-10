@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,6 +31,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
@@ -70,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private ListView lv_tag;
     private TagAdapter tagAdapter;
+    int tag_now=1;
 
     public void initPopUpView(){
         layoutInflater=(LayoutInflater)MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -99,8 +102,16 @@ public class MainActivity extends AppCompatActivity {
 
                 lv_tag=customView.findViewById(R.id.lv_tag);
                 List<String> tagList=new ArrayList<>();
-                tagList.add("firsttag");
-                tagList.add("secondtag");
+                tagList.add("tasks");
+                tagList.add("My Day");
+                tagList.add("Important");
+                tagList.add("Planned");
+                tagList.add("Assigned to you");
+
+                sharedPreferences=getSharedPreferences("tagList",MODE_PRIVATE);
+                SharedPreferences.Editor editor=sharedPreferences.edit();
+                editor.putString("tagList",tagList.toString());
+                editor.commit();
 
                 tagAdapter = new TagAdapter(getApplicationContext(), tagList, numOfTagNotes(tagList));
                 Log.d("tag",tagList.toString());
@@ -115,16 +126,24 @@ public class MainActivity extends AppCompatActivity {
                         int tag = position + 1;
                         List<Note> temp = new ArrayList<>();
                         for (int i = 0; i < noteList.size(); i++) {
-                            if (noteList.get(i).getTag() == tag) {
+                            if(tag==1){
+                                    Note note = noteList.get(i);
+                                    temp.add(note);
+
+                            }
+                            else if (noteList.get(i).getTag() == tag) {
                                 Note note = noteList.get(i);
                                 temp.add(note);
                             }
+
                         }
+
                         NoteAdapter tempAdapter = new NoteAdapter(temp);
                         recyclerView.setAdapter(tempAdapter);
                         //myToolbar.setTitle(tagList.get(position));
                         popupWindow.dismiss();
                         //Log.d(TAG, position + "");
+                        tag_now=tag;
                    }
                 });
 
@@ -189,6 +208,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+        recyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshListView();
+                Log.d("refresh","refresh");
+            }
+        });
+
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,13 +225,13 @@ public class MainActivity extends AppCompatActivity {
                 //intent.putExtra("input",text.getText().toString());//new note
                 String content=text.getText().toString();
                 String time=dataToStr();
-                Note note=new Note(content,time,1);
+                Note note=new Note(content,time,tag_now);
                 CRUD op=new CRUD(getApplicationContext());
                 op.open();
                 op.addNote(note);
                 op.close();
                 noteList.add(note);
-                Toast.makeText(v.getContext(), "you clicked finish " + text.getText().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "add task: " + text.getText().toString(), Toast.LENGTH_SHORT).show();
                 //startActivityForResult(intent,0);
                 refreshListView();
             }
@@ -223,6 +252,21 @@ public class MainActivity extends AppCompatActivity {
 
         op.close();
         adapter.notifyDataSetChanged();
+        List<Note> temp = new ArrayList<>();
+        for (int i = 0; i < noteList.size(); i++) {
+            if(tag_now==1){
+                Note note = noteList.get(i);
+                temp.add(note);
+            }
+            else if (noteList.get(i).getTag() == tag_now) {
+                Note note = noteList.get(i);
+                temp.add(note);
+            }
+
+        }
+
+        NoteAdapter tempAdapter = new NoteAdapter(temp);
+        recyclerView.setAdapter(tempAdapter);
     }
 
     @Override

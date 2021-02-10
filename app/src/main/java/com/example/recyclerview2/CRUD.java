@@ -82,6 +82,17 @@ public class CRUD {
                 NoteDatabase.ID + "=?", new String[] { String.valueOf(note.getId())});
     }
 
+    public int updateNote(Note note, int tag) {
+        note.setTag(tag);
+        ContentValues values = new ContentValues();
+        values.put(NoteDatabase.CONTENT, note.getContent());
+        values.put(NoteDatabase.TIME, note.getTime());
+        values.put(NoteDatabase.MODE, note.getTag());
+
+        return db.update(NoteDatabase.TABLE_NAME, values,
+                NoteDatabase.ID + "=?", new String[]{String.valueOf(note.getId())});
+    }
+
     public void removeNote(Note note){
         //remove a note according to ID value
         db.delete(NoteDatabase.TABLE_NAME, NoteDatabase.ID + "=" + note.getId(), null);
