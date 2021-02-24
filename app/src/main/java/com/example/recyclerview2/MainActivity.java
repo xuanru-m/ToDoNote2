@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
@@ -72,7 +73,11 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private ListView lv_tag;
     private TagAdapter tagAdapter;
+    private ImageButton addtag_button;
+    private EditText addtag_text;
     int tag_now=1;
+    List<String> tagList;
+
 
     public void initPopUpView(){
         layoutInflater=(LayoutInflater)MainActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -101,22 +106,67 @@ public class MainActivity extends AppCompatActivity {
                 //List<String> tagList = Arrays.asList(sharedPreferences.getString("tagListString", null).split("_")); //获取tags
 
                 lv_tag=customView.findViewById(R.id.lv_tag);
-                List<String> tagList=new ArrayList<>();
-                tagList.add("tasks");
-                tagList.add("My Day");
-                tagList.add("Important");
-                tagList.add("Planned");
-                tagList.add("Assigned to you");
+                addtag_button=customView.findViewById(R.id.addtag_button);
+                addtag_text=customView.findViewById(R.id.addtag_text);
+
 
                 sharedPreferences=getSharedPreferences("tagList",MODE_PRIVATE);
                 SharedPreferences.Editor editor=sharedPreferences.edit();
-                editor.putString("tagList",tagList.toString());
-                editor.commit();
+                if(sharedPreferences.toString().length()==0){//share=0,tag=0
+                    List<String> tagList_temp=new ArrayList<>();
+                    tagList_temp.add("tasks");
+                    tagList_temp.add("My Day");
+                    tagList_temp.add("Important");
+                    tagList_temp.add("Planned");
+                    tagList_temp.add("Assigned to you");
+                    editor.putString("tagList",tagList_temp.toString());
+                    editor.commit();
 
+                    Log.d("numoftag","share size(=0) before "+Integer.toString(sharedPreferences.toString().length()));
+
+
+                    Log.d("numoftag","share size(=0) list "+sharedPreferences.toString());
+
+                }else if(sharedPreferences.toString().length()==41){//share=origin,tag
+
+                    //String share =editor.getClass();
+                    //editor.commit();
+                    SharedPreferences sp_read = getSharedPreferences("tagList",MODE_PRIVATE);
+                    String list_string=sp_read.getString("tagList","");
+                    tagList= Arrays.asList(sharedPreferences.getString("tagList",null).substring(1,sharedPreferences.getString("tagList",null).length()-1).split(","));
+                    Log.d("numoftag","share size "+Integer.toString(sharedPreferences.toString().length()));
+                    Log.d("numoftag","share size(=0) list "+tagList.toString());
+                }else{//share>0,taglist got elements from share
+                     Log.d("numoftag","share size(>>5) list "+tagList.toString());
+                    tagList= Arrays.asList(sharedPreferences.getString("tagList",null).substring(1,sharedPreferences.getString("tagList",null).length()-1).split(","));
+
+                }
+
+                //Log.d("tag",tagList.toString());
                 tagAdapter = new TagAdapter(getApplicationContext(), tagList, numOfTagNotes(tagList));
-                Log.d("tag",tagList.toString());
+
 
                 lv_tag.setAdapter(tagAdapter);
+
+                addtag_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String new_tag=addtag_text.getText().toString();
+                        Log.d("tag","tagList: "+tagList.toString());
+                        List<String> realtagList=new ArrayList<String>(tagList);
+                        realtagList.add(new_tag);
+                        Log.d("tag",realtagList.toString());
+                        //tagList.add(new_tag);
+                        sharedPreferences=getSharedPreferences("tagList",MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putString("tagList",realtagList.toString());
+                        editor.commit();
+
+                        tagAdapter = new TagAdapter(getApplicationContext(), realtagList, numOfTagNotes(realtagList));
+                        lv_tag.setAdapter(tagAdapter);
+                        Toast.makeText(getApplicationContext(), tagList.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
 
                 lv_tag.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -169,6 +219,10 @@ public class MainActivity extends AppCompatActivity {
         Integer[] numbers = new Integer[noteStringList.size()];
         for(int i = 0; i < numbers.length; i++) numbers[i] = 0;
         for(int i = 0; i < noteList.size(); i++){
+            //Log.d("numoftag","numbers "+numbers.toString());
+            //Log.d("numoftag","i "+i);
+            //Log.d("numoftag","taglist.size "+Integer.toString(noteStringList.size()));
+            //Log.d("numoftag","noteList.get(i).getTag() "+noteList.get(i).getTag());
             numbers[noteList.get(i).getTag() - 1] ++;
         }
         return Arrays.asList(numbers);
@@ -232,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 op.close();
                 noteList.add(note);
                 Toast.makeText(v.getContext(), "add task: " + text.getText().toString(), Toast.LENGTH_SHORT).show();
-                //startActivityForResult(intent,0);
+                //v.getContext().startActivity(intent);
                 refreshListView();
             }
         });

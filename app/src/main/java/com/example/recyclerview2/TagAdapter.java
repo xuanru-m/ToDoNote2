@@ -44,7 +44,8 @@ public class TagAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        for(int i = 0; i < numList.size(); i++) Log.d("tag", numList.get(i).toString());
+        //for(int i = 0; i < numList.size(); i++)
+        //    Log.d("tag", numList.get(i).toString());
         Log.d("tag", "getView: " + numList.size());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -56,6 +57,7 @@ public class TagAdapter extends BaseAdapter {
         if(position==0){
             blank_tag.setText("All");
         }else {
+            Log.d("tag","numList: "+numList.toString());
             blank_tag.setText(numList.get(position).toString());
         }
 

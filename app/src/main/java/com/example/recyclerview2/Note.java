@@ -1,5 +1,5 @@
 package com.example.recyclerview2;
-
+//version3
 public class Note {
 
     private long id;
@@ -11,6 +11,12 @@ public class Note {
     }
 
     public Note(String content, String time, int tag) {
+        this.content = content;
+        this.time = time;
+        this.tag = tag;
+    }
+    public Note(long id,String content, String time, int tag) {
+        this.id=id;
         this.content = content;
         this.time = time;
         this.tag = tag;

@@ -6,5 +6,5 @@
     <attr name="titleColor" format="color"/>
     <attr name="sun" format="string"/>
     <attr name="star" format="string"/>
-
+    <attr name="addTag" format="string"/>
 </resources>

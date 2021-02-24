@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,9 +78,11 @@ public class CRUD {
         values.put(NoteDatabase.CONTENT, note.getContent());
         values.put(NoteDatabase.TIME, note.getTime());
         values.put(NoteDatabase.MODE, note.getTag());
+        Log.d("chcon","database "+values.toString());
+        Log.d("chcon","databasID "+note.getId());
         //updating row
         return db.update(NoteDatabase.TABLE_NAME, values,
-                NoteDatabase.ID + "=?", new String[] { String.valueOf(note.getId())});
+                NoteDatabase.ID + "="+note.getId(), new String[] { });
     }
 
     public int updateNote(Note note, int tag) {

@@ -24,6 +24,26 @@
         android:layout_below="@+id/all_task">
 
     </ListView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/addtag_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="?attr/addTag"/>
+        <EditText
+            android:id="@+id/addtag_text"
+            android:clickable="true"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:hint="Add New Tag"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:layout_marginLeft="12dp"/>
+    </LinearLayout>
 </LinearLayout>
 
 

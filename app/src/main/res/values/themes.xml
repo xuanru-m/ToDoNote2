@@ -16,7 +16,7 @@
         <item name="delete_all">@drawable/delete_all</item>
         <item name="delete">@drawable/delete</item>
         <item name="dehaze">@drawable/dehaze</item>
-
+        <item name="addTag">@drawable/addtag</item>
         <item name="sun">@drawable/sun</item>
         <item name="star">@drawable/star</item>
     </style>

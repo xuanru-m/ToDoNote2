@@ -1,7 +1,5 @@
 package com.example.recyclerview2;
 
-
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -73,8 +71,9 @@ public class EditActivity extends AppCompatActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     tag=(int)id+1;
+                    Log.d("newtag",Integer.toString(tag));
                     tagChange=true;
-//                    content=et.getText().toString();
+                    content=et.getText().toString();
 //                    Note note=new Note(content,time,tag);
 //                    id=getIntent.getLongExtra("id",0);
 //                    Log.d("note","id "+id);
@@ -86,8 +85,6 @@ public class EditActivity extends AppCompatActivity {
 //                    Log.d("note","content "+note.getContent());
 //                    Log.d("note","tag "+Integer.toString(note.getTag()));
 //                    op.close();
-
-
 //                    String content = data.getExtras().getString("content");
 //                    String time = data.getExtras().getString("time");
 //                    int tag = data.getExtras().getInt("tag", 1);
@@ -98,6 +95,12 @@ public class EditActivity extends AppCompatActivity {
 //                    op.updateNote(newNote);
 //                    achievement.editNote(op.getNote(note_Id).getContent(), content);
 //                    op.close();
+                    id=getIntent().getLongExtra("id",0);
+                    CRUD op=new CRUD(getApplicationContext());
+                    op.open();
+                    Note note=new Note(id,content,time,tag);
+                    op.updateNote(note);
+                    op.close();
                 }
 
                 @Override
@@ -109,17 +112,15 @@ public class EditActivity extends AppCompatActivity {
             myToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    content=et.getText().toString();
-                    Log.d("note",content);
-                    Log.d("note",Integer.toString(tag));
-                    Note note=new Note(content,time,tag);
                     CRUD op=new CRUD(getApplicationContext());
                     op.open();
-                    op.removeNote(id);
-                    op.addNote(note);
+                    tag=op.getNote(id).getTag();
+                    content=et.getText().toString();
+                    long id=getIntent().getLongExtra("id",0);
+                    Note note=new Note(id,content,time,tag);
+                    op.updateNote(note);
                     op.close();
                     finish();
-
                 }
             });
 
@@ -136,18 +137,15 @@ public class EditActivity extends AppCompatActivity {
             if(keyCode==KeyEvent.KEYCODE_HOME){
                 return true;
             }else if(keyCode==KeyEvent.KEYCODE_BACK){
-
-                this.content=et.getText().toString();
-                Log.d("note",content);
-                Log.d("note",Integer.toString(tag));
-                Note note=new Note(content,time,tag);
                 CRUD op=new CRUD(getApplicationContext());
                 op.open();
-                op.removeNote(id);
-                op.addNote(note);
+                tag=op.getNote(id).getTag();
+                content=et.getText().toString();
+                long id=getIntent().getLongExtra("id",0);
+                Note note=new Note(id,content,time,tag);
+                op.updateNote(note);
                 op.close();
                 finish();
-
                 return true;
             }
             return true;
